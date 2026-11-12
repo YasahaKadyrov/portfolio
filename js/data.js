@@ -143,14 +143,6 @@ const SITE = {
       link: "https://www.instagram.com/reel/CvPWpdGAKFj/",
       image: "assets/img/reel-uib-business.jpg"
     },
-    {
-      title: "Студенческая работа — ролик для приёмной комиссии UIB",
-      category: "reels",
-      role: "Монтаж · Reels для UIB",
-      link: "https://www.instagram.com/reel/Ce_G51GAjOp/",
-      image: "assets/img/reel-uib-admission.jpg",
-      video: "assets/video/reel-uib-admission.mp4"
-    },
 
     // Пример ролика с YouTube — раскомментируйте и подставьте свой ID:
     // {
