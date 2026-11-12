@@ -18,13 +18,18 @@
   const filters = $("#filters");
   const projects = SITE.projects;
 
-  const coverOf = (p) => p.image || (p.youtube ? `https://i.ytimg.com/vi/${p.youtube}/hqdefault.jpg` : "");
+  const catOf = (id) => SITE.categories.find((c) => c.id === id) || {};
+  const isVideo = (p) => Boolean(p.youtube || p.video);
+  const isVertical = (p) => Boolean(catOf(p.category).vertical);
+  // У вертикальных роликов YouTube есть обложка в родных пропорциях (oar2)
+  const coverOf = (p) => p.image || (p.youtube
+    ? `https://i.ytimg.com/vi/${p.youtube}/${isVertical(p) ? "oar2" : "hqdefault"}.jpg` : "");
 
   function card(p, i) {
     // Ролики и картинки открываются на сайте; остальное — ссылкой на оригинал
-    const opensHere = Boolean(p.youtube || p.image);
-    const c = el(opensHere ? "button" : "a", "card" + (p.wide ? " card-wide" : ""));
-    c.dataset.cat = p.category;
+    const opensHere = Boolean(p.youtube || p.video || p.image);
+    const kind = isVideo(p) ? "card-video" : p.image ? "card-image" : "card-link";
+    const c = el(opensHere ? "button" : "a", `card ${kind}` + (p.wide ? " card-wide" : "") + (isVertical(p) ? " card-vertical" : ""));
     if (opensHere) {
       c.type = "button";
       c.addEventListener("click", () => openLightbox(i));
@@ -38,19 +43,25 @@
       const img = new Image();
       img.loading = "lazy"; img.decoding = "async"; img.alt = "";
       img.referrerPolicy = "no-referrer";
-      img.onerror = () => { img.remove(); media.classList.add("is-empty"); };
+      img.onerror = () => {
+        // у старых Shorts может не быть вертикальной обложки — берём обычную
+        if (p.youtube && !img.dataset.retry) { img.dataset.retry = "1"; img.src = `https://i.ytimg.com/vi/${p.youtube}/hqdefault.jpg`; return; }
+        img.remove(); media.classList.add("is-empty");
+      };
       img.src = src;
       media.append(img);
     } else if (p.cover) {
       const cov = el("div", "card-cover");
-      if (p.badge) cov.dataset.badge = p.badge;
       cov.append(el("span", "", p.cover));
       media.append(cov);
     } else {
       media.classList.add("is-empty");
     }
     const site = /instagram/.test(p.link || "") ? "Instagram" : /youtu/.test(p.link || "") ? "YouTube" : "оригинал";
-    media.append(el("span", "card-open", p.youtube ? "Смотреть" : opensHere ? "Открыть" : "На " + site));
+    if (isVideo(p)) media.append(el("span", "card-play"));
+    else if (!opensHere) media.append(el("span", "card-open", "На " + site));
+    else if (kind === "card-image" && /instagram/.test(p.link || "")) media.append(el("span", "card-open", "Instagram"));
+    if (p.badge) media.append(el("span", "card-badge", p.badge));
 
     const body = el("div", "card-body");
     body.append(el("span", "card-title", p.title), el("span", "card-role", p.role));
@@ -60,16 +71,44 @@
     return c;
   }
 
+  // «Все»: два блока (видео / графика), внутри — категории с подзаголовками
   function renderGrid(cat, animate = true) {
     const draw = () => {
-      grid.replaceChildren(...projects.map((p, i) => [p, i])
-        .filter(([p]) => cat === "all" || p.category === cat)
-        .map(([p, i]) => card(p, i)));
+      const blocks = SITE.groups.map((g) => {
+        const cats = SITE.categories.filter((c) => c.group === g.id && (cat === "all" || c.id === cat));
+        const sections = cats.map((c) => {
+          const items = projects.map((p, i) => [p, i]).filter(([p]) => p.category === c.id);
+          if (!items.length) return null;
+          const sec = el("section", "work-cat");
+          const head = el("div", "work-cat-head");
+          const h = el("h4", "", c.label);
+          h.append(el("span", "", String(items.length)));
+          head.append(h);
+          if (c.note) head.append(el("p", "", c.note));
+          if (c.link) {
+            const a = el("a", "", c.linkLabel || "Открыть");
+            a.href = c.link; a.target = "_blank"; a.rel = "noopener";
+            head.append(a);
+          }
+          const g2 = el("div", "grid" + (c.vertical ? " grid-vertical" : "") + (g.id === "image" ? " grid-image" : ""));
+          g2.append(...items.map(([p, i]) => card(p, i)));
+          sec.append(head, g2);
+          return sec;
+        }).filter(Boolean);
+        if (!sections.length) return null;
+        const block = el("div", "work-block work-" + g.id);
+        const bar = el("div", "work-bar");
+        const total = sections.reduce((n, s) => n + s.querySelectorAll(".card").length, 0);
+        bar.append(el("h3", "", g.label), el("span", "", g.note || ""), el("b", "", String(total)));
+        block.append(bar, ...sections);
+        return block;
+      }).filter(Boolean);
+      grid.replaceChildren(...blocks);
     };
     if (animate && document.startViewTransition && !reduced) document.startViewTransition(draw); else draw();
   }
 
-  SITE.categories
+  [{ id: "all", label: "Все" }, ...SITE.categories]
     .filter((c) => c.id === "all" || projects.some((p) => p.category === c.id))
     .forEach((c, idx) => {
       const b = el("button", "filter", c.label);
@@ -94,9 +133,15 @@
     link.hidden = !href;
     if (href) {
       link.href = href;
-      link.textContent = /behance/.test(href) ? "Открыть на Behance" : /youtu/.test(href) ? "Открыть на YouTube" : "Открыть оригинал";
+      link.textContent = /behance/.test(href) ? "Открыть на Behance" : /youtu/.test(href) ? "Открыть на YouTube" : /instagram/.test(href) ? "Открыть в Instagram" : "Открыть оригинал";
     }
-    if (p.youtube) {
+    lbMedia.classList.toggle("is-vertical", isVertical(p) && isVideo(p));
+    if (p.video) {
+      const v = el("video");
+      v.src = p.video; v.controls = true; v.autoplay = true; v.playsInline = true;
+      if (p.image) v.poster = p.image;
+      lbMedia.replaceChildren(v);
+    } else if (p.youtube) {
       const f = el("iframe");
       f.src = `https://www.youtube-nocookie.com/embed/${p.youtube}?autoplay=1&rel=0`;
       f.title = p.title;

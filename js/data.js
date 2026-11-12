@@ -15,13 +15,29 @@ const SITE = {
     instagram: ""                 // ссылка на профиль
   },
 
-  // Категории для фильтра в портфолио
+  // Два больших блока в разделе «Работы»
+  groups: [
+    { id: "video", label: "Видео", note: "Ролики открываются прямо на сайте" },
+    { id: "image", label: "Графика и 3D", note: "Изображения открываются в полном размере" }
+  ],
+
+  /*
+    Категории: кнопки фильтра и подзаголовки внутри блоков.
+      group    — в каком блоке показывать: "video" или "image"
+      vertical — true для вертикальных роликов (Reels, Shorts)
+      note     — подпись под названием категории (необязательно)
+      link     — ссылка рядом с названием (необязательно)
+  */
   categories: [
-    { id: "all", label: "Все" },
-    { id: "edit", label: "Новости и интервью" },
-    { id: "podcast", label: "Подкасты" },
-    { id: "reels", label: "Reels" },
-    { id: "3d", label: "3D-графика" }
+    { id: "edit", label: "Новости и интервью", group: "video" },
+    { id: "youtube", label: "YouTube-шоу", group: "video" },
+    { id: "podcast", label: "Подкасты", group: "video" },
+    { id: "ai", label: "ИИ-видео", group: "video", vertical: true,
+      note: "Мой канал Tiny Bone: ролики созданы с помощью нейросетей",
+      link: "https://www.youtube.com/@TinyBonesss", linkLabel: "Открыть канал" },
+    { id: "reels", label: "Reels", group: "video", vertical: true },
+    { id: "3d", label: "3D-графика", group: "image",
+      link: "https://www.behance.net/yashakadirov", linkLabel: "Все работы на Behance" }
   ],
 
   /*
@@ -32,11 +48,11 @@ const SITE = {
       text     — короткое описание (необязательно)
       link     — ссылка на оригинал
       image    — обложка: путь к файлу (assets/img/...) или ссылка
+      youtube  — ID ролика на YouTube (то, что после watch?v=).
+                 Ролик открывается прямо на сайте, обложка подставляется сама.
+      video    — путь к своему видеофайлу (assets/video/...), играет на сайте
       cover    — крупная надпись вместо обложки, если картинки нет
       badge    — жёлтая плашка на обложке (необязательно)
-      youtube  — ID ролика на YouTube (то, что после watch?v=).
-                 Если указан, ролик открывается прямо на сайте,
-                 а обложка подставляется автоматически.
       wide     — true, чтобы карточка была крупной
   */
   projects: [
@@ -75,20 +91,65 @@ const SITE = {
       youtube: "coTwuCsYIc0"
     },
     {
-      title: "Студенческая работа №1 — ролик для Instagram",
-      category: "reels",
-      role: "Монтаж · Reels · студенческий проект",
-      link: "https://www.instagram.com/reel/CvPWpdGAKFj/",
-      cover: "REEL",
-      badge: "9:16"
+      title: "Третий лишний в Backrooms — канал «Даня Кортиз»",
+      category: "youtube",
+      role: "Монтаж · 22 мин · 600+ тыс. просмотров",
+      youtube: "l46SkTXdZz4"
     },
     {
-      title: "Студенческая работа №2 — ролик для Instagram",
+      title: "Новые адские уровни (Super Bunny Man) — канал «Даня Кортиз»",
+      category: "youtube",
+      role: "Монтаж · 18 мин · 120+ тыс. просмотров",
+      youtube: "yd2GJTasJNY"
+    },
+    {
+      title: "«От души подкаст» — гость Qewbite, канал Little Rock",
+      category: "podcast",
+      role: "Монтаж · 1 ч 04 мин",
+      youtube: "oXpeH3Bv80w"
+    },
+    {
+      title: "What if you have an unlimited card?",
+      category: "ai",
+      role: "Сделано с помощью ИИ · Tiny Bone",
+      youtube: "C6vsuhZfnqA",
+      badge: "ИИ"
+    },
+    {
+      title: "What if you woke up in the USSR?",
+      category: "ai",
+      role: "Сделано с помощью ИИ · Tiny Bone",
+      youtube: "oijVkqwvZ1Q",
+      badge: "ИИ"
+    },
+    {
+      title: "You've entered your favorite anime",
+      category: "ai",
+      role: "Сделано с помощью ИИ · Tiny Bone",
+      youtube: "zFd6UJR8QV8",
+      badge: "ИИ"
+    },
+    {
+      title: "How to survive in the Kaiju world?",
+      category: "ai",
+      role: "Сделано с помощью ИИ · Tiny Bone",
+      youtube: "4jPgqjtfq08",
+      badge: "ИИ"
+    },
+    {
+      title: "Студенческая работа — «Бизнес в UIB»",
       category: "reels",
-      role: "Монтаж · Reels · студенческий проект",
+      role: "Монтаж и графика · Reels для UIB",
+      link: "https://www.instagram.com/reel/CvPWpdGAKFj/",
+      image: "assets/img/reel-uib-business.jpg"
+    },
+    {
+      title: "Студенческая работа — ролик для приёмной комиссии UIB",
+      category: "reels",
+      role: "Монтаж · Reels для UIB",
       link: "https://www.instagram.com/reel/Ce_G51GAjOp/",
-      cover: "REEL",
-      badge: "9:16"
+      image: "assets/img/reel-uib-admission.jpg",
+      video: "assets/video/reel-uib-admission.mp4"
     },
 
     // Пример ролика с YouTube — раскомментируйте и подставьте свой ID:
