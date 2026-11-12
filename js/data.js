@@ -91,6 +91,12 @@ const SITE = {
       youtube: "coTwuCsYIc0"
     },
     {
+      title: "«Битва матерей»: дедовщина в армии Казахстана — ORDA News",
+      category: "edit",
+      role: "Монтаж",
+      youtube: "eNVY-Y06nsI"
+    },
+    {
       title: "Третий лишний в Backrooms — канал «Даня Кортиз»",
       category: "youtube",
       role: "Монтаж · 22 мин · 600+ тыс. просмотров",
@@ -101,6 +107,12 @@ const SITE = {
       category: "youtube",
       role: "Монтаж · 18 мин · 120+ тыс. просмотров",
       youtube: "yd2GJTasJNY"
+    },
+    {
+      title: "Новые уровни, старые мы — канал «Это Веталя»",
+      category: "youtube",
+      role: "Монтаж",
+      youtube: "RuDlS3uxaFw"
     },
     {
       title: "«От души подкаст» — гость Qewbite, канал Little Rock",
@@ -142,6 +154,28 @@ const SITE = {
       role: "Монтаж и графика · Reels для UIB",
       link: "https://www.instagram.com/reel/CvPWpdGAKFj/",
       image: "assets/img/reel-uib-business.jpg"
+    },
+
+    {
+      title: "Студенческая работа — «Хочу грант», UNICON",
+      category: "reels",
+      role: "Монтаж и графика · Reels для UIB",
+      link: "https://www.instagram.com/reel/Cj5O4TLgLuI/",
+      image: "assets/img/reel-uib-grant.jpg"
+    },
+    {
+      title: "Студенческая работа — «Сдать документы»",
+      category: "reels",
+      role: "Монтаж и графика · Reels для UIB",
+      link: "https://www.instagram.com/reel/Ce_G51GAjOp/",
+      image: "assets/img/reel-uib-documents.jpg"
+    },
+    {
+      title: "Студенческая работа — «UIB-шный Санта»",
+      category: "reels",
+      role: "Монтаж и графика · Reels для UIB",
+      link: "https://www.instagram.com/tv/CYHExI9Nl5a/",
+      image: "assets/img/reel-uib-santa.jpg"
     },
 
     // Пример ролика с YouTube — раскомментируйте и подставьте свой ID:

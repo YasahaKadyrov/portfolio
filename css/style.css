@@ -472,6 +472,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
   .js .hero-role, .js .hero-lead, .js .hero-actions, .js .hero-visual, .js .meta.reveal { opacity: 1; translate: none; }
   .px-a, .px-b { transform: none; }
   .px-b { transform: scaleY(-1); }
+  /* бегущая строка остаётся, но медленнее: так попросил владелец сайта */
+  .ticker-run { animation: run 70s linear infinite !important; }
 }
 
 @media print {
